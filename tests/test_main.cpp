@@ -323,6 +323,94 @@ TEST("compiler rejects aggregate activation-size overflow") {
   CHECK(rejected);
 }
 
+TEST("shape arithmetic and builder boundaries reject malformed graphs") {
+  bool empty_shape = false;
+  try {
+    static_cast<void>(nnc::Tensor({}, {}));
+  } catch (const std::invalid_argument&) {
+    empty_shape = true;
+  }
+  CHECK(empty_shape);
+
+  bool element_overflow = false;
+  try {
+    static_cast<void>(nnc::Tensor(
+        {std::numeric_limits<std::size_t>::max(), 2}, {}));
+  } catch (const std::overflow_error&) {
+    element_overflow = true;
+  }
+  CHECK(element_overflow);
+
+  bool byte_overflow = false;
+  try {
+    static_cast<void>(nnc::Tensor(
+        {std::numeric_limits<std::size_t>::max() / 2}, {}));
+  } catch (const std::overflow_error&) {
+    byte_overflow = true;
+  }
+  CHECK(byte_overflow);
+
+  bool empty_name = false;
+  try {
+    nnc::GraphBuilder builder;
+    static_cast<void>(builder.input("", {1}));
+  } catch (const std::invalid_argument&) {
+    empty_name = true;
+  }
+  CHECK(empty_name);
+
+  bool unknown_value = false;
+  try {
+    nnc::GraphBuilder builder;
+    static_cast<void>(builder.relu(999));
+  } catch (const std::invalid_argument&) {
+    unknown_value = true;
+  }
+  CHECK(unknown_value);
+
+  bool no_input = false;
+  try {
+    nnc::GraphBuilder builder;
+    const auto constant = builder.constant("constant", {{1}, {1.0F}});
+    builder.output(constant);
+    static_cast<void>(std::move(builder).build());
+  } catch (const std::invalid_argument&) {
+    no_input = true;
+  }
+  CHECK(no_input);
+}
+
+TEST("compiler rejects activation alignment overflow") {
+  nnc::GraphBuilder builder;
+  const auto huge = std::numeric_limits<std::size_t>::max() / sizeof(float);
+  const auto input = builder.input("huge", {huge});
+  const auto output = builder.relu(input);
+  builder.output(output);
+  const auto graph = std::move(builder).build();
+  bool rejected = false;
+  try {
+    static_cast<void>(nnc::Compiler::compile(graph));
+  } catch (const std::overflow_error&) {
+    rejected = true;
+  }
+  CHECK(rejected);
+}
+
+TEST("zero-instruction graph returns its input with automatic workers") {
+  nnc::GraphBuilder builder;
+  const auto input = builder.input("input", {2});
+  builder.output(input);
+  const auto graph = std::move(builder).build();
+  auto model = nnc::Compiler::compile(graph, {.threads = 0});
+  const nnc::Inputs inputs{{input, {{2}, {3.0F, -1.0F}}}};
+  const auto result = model.run(inputs);
+  CHECK(model.instructions().empty());
+  CHECK(model.memory_plan().empty());
+  CHECK(model.stats().arena_bytes == 0);
+  CHECK(result.stats.activation_buffer_allocations == 0);
+  CHECK(result.output.data == std::vector<float>({3.0F, -1.0F}));
+}
+
 }  // namespace
 
 int main() {
