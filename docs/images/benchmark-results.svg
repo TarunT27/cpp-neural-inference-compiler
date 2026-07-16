@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="440" viewBox="0 0 1200 440" role="img" aria-labelledby="title desc">
+  <title id="title">Measured NNC latency and activation memory</title>
+  <desc id="desc">Compiled four-thread execution measures 0.779 milliseconds median versus 2.682 for the interpreter, while activation memory falls from 336 to 96 KiB.</desc>
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#07111f"/><stop offset="1" stop-color="#14152c"/></linearGradient><linearGradient id="cyan" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#12648a"/><stop offset="1" stop-color="#59dcff"/></linearGradient><linearGradient id="violet" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#4b277d"/><stop offset="1" stop-color="#a76cff"/></linearGradient></defs>
+  <rect width="1200" height="440" rx="24" fill="url(#bg)"/>
+  <g font-family="Segoe UI,Arial"><text x="50" y="55" fill="#d9ecff" font-size="24" font-weight="700">RELEASE BENCHMARK · LOWER IS BETTER</text><text x="50" y="82" fill="#8fa7c2" font-size="14">Intel Core Ultra 7 258V · GCC 16.1 · 30 warmups + 500 iterations</text>
+    <text x="50" y="130" fill="#7edfff" font-size="16" font-weight="700">MEDIAN LATENCY</text>
+    <g fill="#dceeff" font-size="15"><text x="50" y="178">Interpreter</text><text x="50" y="238">Compiled · 1T</text><text x="50" y="298">Compiled · 4T</text></g>
+    <rect x="190" y="150" width="724" height="38" rx="8" fill="#26314a"/><rect x="190" y="150" width="724" height="38" rx="8" fill="url(#cyan)" opacity=".75"/>
+    <rect x="190" y="210" width="587" height="38" rx="8" fill="url(#violet)"/><rect x="190" y="270" width="210" height="38" rx="8" fill="#f2a846"/>
+    <g fill="#fff" font-size="16" font-weight="700"><text x="930" y="176">2.682 ms</text><text x="793" y="236">2.172 ms</text><text x="416" y="296">0.779 ms</text></g>
+    <line x1="600" y1="115" x2="600" y2="350" stroke="#31445f"/>
+    <text x="650" y="340" fill="#75f1dd" font-size="16" font-weight="700">ACTIVATION MEMORY</text><text x="650" y="380" fill="#fff" font-size="30" font-weight="700">336 KiB → 96 KiB</text><text x="970" y="380" fill="#75f1dd" font-size="20" font-weight="700">−71.4%</text>
+    <text x="50" y="390" fill="#f4b15a" font-size="30" font-weight="700">3.44×</text><text x="150" y="390" fill="#dceeff" font-size="17">observed median speedup</text>
+  </g>
+</svg>

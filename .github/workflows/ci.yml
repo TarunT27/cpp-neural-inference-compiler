@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    name: Build and test (${{ matrix.toolchain }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            toolchain: GCC
+            compiler: g++
+          - os: ubuntu-latest
+            toolchain: Clang
+            compiler: clang++
+          - os: windows-latest
+            toolchain: MSVC
+            compiler: cl
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - name: Configure (GCC or Clang)
+        if: runner.os != 'Windows'
+        run: >-
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+          -DCMAKE_CXX_COMPILER=${{ matrix.compiler }}
+      - name: Configure (MSVC)
+        if: runner.os == 'Windows'
+        run: cmake -S . -B build
+      - name: Build
+        run: cmake --build build --config Release --parallel
+      - name: Test
+        run: ctest --test-dir build -C Release --output-on-failure
+
+  sanitizers-and-coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+      - name: Install coverage tool
+        run: pip install --require-hashes -r ci/requirements-coverage.txt
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DNNC_ENABLE_COVERAGE=ON -DNNC_ENABLE_SANITIZERS=ON
+      - name: Build
+        run: cmake --build build --parallel
+      - name: Test with ASan and UBSan
+        run: ctest --test-dir build --output-on-failure
+      - name: Enforce library line coverage
+        run: >-
+          gcovr --root . --filter src
+          --exclude-throw-branches --exclude-unreachable-branches
+          --fail-under-line 80 --fail-under-function 80 --fail-under-branch 80
+          --print-summary

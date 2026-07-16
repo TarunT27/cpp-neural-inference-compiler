@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="500" viewBox="0 0 1200 500" role="img" aria-labelledby="title desc">
+  <title id="title">NNC compiler and runtime architecture</title>
+  <desc id="desc">Graph building and validation feed fusion and liveness passes, then an immutable plan executes with an activation arena and thread pool.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#07111f"/><stop offset="1" stop-color="#12152c"/></linearGradient>
+    <linearGradient id="compiler" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0a4760"/><stop offset="1" stop-color="#34205b"/></linearGradient>
+    <marker id="a" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#56d7ff"/></marker>
+  </defs>
+  <rect width="1200" height="500" rx="24" fill="url(#bg)"/>
+  <g font-family="Segoe UI,Arial">
+    <text x="50" y="55" fill="#d9ecff" font-size="25" font-weight="700">NNC COMPILER + RUNTIME</text>
+    <g stroke="#56d7ff" stroke-width="2.5" fill="none" marker-end="url(#a)"><path d="M260 145H330"/><path d="M600 145H680"/><path d="M875 145V225"/><path d="M875 305V360"/></g>
+    <rect x="50" y="100" width="210" height="90" rx="16" fill="#122a45" stroke="#3984b5"/>
+    <text x="155" y="135" fill="#7edfff" text-anchor="middle" font-size="14" font-weight="700">FRONT END</text><text x="155" y="164" fill="#fff" text-anchor="middle" font-size="18">GraphBuilder + IR</text>
+    <rect x="330" y="85" width="270" height="120" rx="18" fill="url(#compiler)" stroke="#8a63ef"/>
+    <text x="465" y="120" fill="#cab8ff" text-anchor="middle" font-size="14" font-weight="700">COMPILER PIPELINE</text><text x="465" y="150" fill="#fff" text-anchor="middle" font-size="17">Validate → Fuse → Liveness</text><text x="465" y="177" fill="#9fc5dc" text-anchor="middle" font-size="15">Linear-scan arena planning</text>
+    <rect x="680" y="100" width="390" height="90" rx="16" fill="#152944" stroke="#3f91c4"/>
+    <text x="875" y="135" fill="#7edfff" text-anchor="middle" font-size="14" font-weight="700">IMMUTABLE EXECUTABLE PLAN</text><text x="875" y="164" fill="#fff" text-anchor="middle" font-size="18">3 fused instructions + buffer offsets</text>
+    <rect x="680" y="225" width="390" height="80" rx="16" fill="#17383f" stroke="#33c6bb"/>
+    <text x="875" y="257" fill="#75f1dd" text-anchor="middle" font-size="14" font-weight="700">SESSION</text><text x="875" y="284" fill="#fff" text-anchor="middle" font-size="17">One 96 KiB activation arena</text>
+    <rect x="680" y="360" width="390" height="90" rx="16" fill="#2c2148" stroke="#9367ed"/>
+    <text x="875" y="392" fill="#cbb8ff" text-anchor="middle" font-size="14" font-weight="700">DETERMINISTIC CPU BACK END</text><text x="875" y="420" fill="#fff" text-anchor="middle" font-size="17">Persistent pool · row-owned work</text>
+    <g fill="#10283f" stroke="#3d8ab8"><rect x="90" y="265" width="440" height="185" rx="18"/></g>
+    <text x="310" y="302" fill="#7edfff" text-anchor="middle" font-size="14" font-weight="700">INSPECTABLE METRICS</text>
+    <text x="130" y="342" fill="#dceeff" font-size="16">• node count + fusion count</text><text x="130" y="374" fill="#dceeff" font-size="16">• liveness intervals + arena offsets</text><text x="130" y="406" fill="#dceeff" font-size="16">• allocations + workers + tasks</text><text x="130" y="438" fill="#dceeff" font-size="16">• p50 / p95 latency + JSON report</text>
+  </g>
+</svg>

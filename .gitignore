@@ -1,0 +1,9 @@
+build*/
+.cache/
+.idea/
+.vscode/
+*.gcda
+*.gcno
+*.gcov
+coverage.xml
+e2e-report.json

@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "model": {"batch": 64, "input": 128, "layers": [256, 128, 64]},
+  "configuration": {"warmup": 30, "iterations": 500, "requested_threads": 4},
+  "compile_ms": {"compiled_1_thread": 0.137900, "compiled_multi_thread": 0.363200},
+  "graph": {"operations_before": 9, "operations_after": 3, "fused_linear_relu": 3},
+  "results": {
+    "serial_interpreter": {
+      "minimum_ms": 2.033900,
+      "mean_ms": 2.832607,
+      "median_ms": 2.682100,
+      "p95_ms": 3.675700,
+      "peak_activation_bytes": 344064,
+      "activation_buffer_allocations": 9,
+      "workers": 1
+    },
+    "compiled_1_thread": {
+      "minimum_ms": 1.969200,
+      "mean_ms": 2.255570,
+      "median_ms": 2.171600,
+      "p95_ms": 2.741900,
+      "peak_activation_bytes": 98304,
+      "activation_buffer_allocations": 1,
+      "workers": 1
+    },
+    "compiled_multi_thread": {
+      "minimum_ms": 0.587600,
+      "mean_ms": 0.840989,
+      "median_ms": 0.779300,
+      "p95_ms": 1.224900,
+      "peak_activation_bytes": 98304,
+      "activation_buffer_allocations": 1,
+      "workers": 4
+    }
+  },
+  "summary": {"speedup": 3.441678, "memory_reduction_percent": 71.428571, "max_abs_error": 0.000000e+00}
+}
